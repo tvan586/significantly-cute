@@ -17,7 +17,7 @@ The findings are written up as a *Significance*-style article aimed at a general
 | File | Description |
 |------|-------------|
 | `01_data/raw/UoA_campus_observations701361.ods` | iNaturalist observations from the UoA City Campus (n = 5,654 records, 2002–present). Columns include observation date, GPS coordinates, taxon classification, common name, quality grade, and observer ID. |
-| `01_data/raw/HumanAnimal_relations_Appendix_A1.xlsx` | Supplementary dataset on human–animal relationships, including ratings for valence, arousal, familiarity, cuteness, dangerousness, and other attributes across animal categories. Used for [**describe how you use it, or remove if not used**]. |
+| `01_data/raw/HumanAnimal_relations_Appendix_A1.xlsx` | Supplementary dataset on human–animal relationships, including ratings for valence, arousal, familiarity, cuteness, dangerousness, and other attributes across animal categories. Used for defining whether an animal is considered charismatic or not.
 
 > Raw data files are read-only and are not modified by any script. All outputs are written to `03_figures/` and `04_outputs/`.
 
@@ -27,14 +27,13 @@ The findings are written up as a *Significance*-style article aimed at a general
 
 ### Requirements
 
-- R (version 4.x or later)
+- R (version 4.5.3 or later)
 - The following R packages:
 
 ```r
 install.packages(c(
   "tidyverse",   # data wrangling and plotting
-  "readODS",     # reading .ods files
-  "readxl",      # reading .xlsx files
+  "readr",       # reading .csv files
   "lubridate",   # date handling
   "sf"           # spatial data (if mapping)
 ))
@@ -44,7 +43,7 @@ install.packages(c(
 
 Run the scripts in order from the `02_R/` folder:
 
-1. `01_load_and_clean.R` — imports raw data, standardises column names, filters to research-quality observations
+1. `01_data_cleaning.R` — imports raw data, standardises column names, filters to research-quality observations
 2. `02_explore.R` — exploratory summaries and initial plots
 3. `03_analysis.R` — main analysis (species richness, temporal trends, etc.)
 4. `04_figures.R` — generates final figures saved to `03_figures/`
@@ -65,7 +64,7 @@ uoa-campus-biodiversity/
 │
 ├── 02_R/
 │   ├── 00_run_all.R            ← runs all scripts in sequence
-│   ├── 01_load_and_clean.R
+│   ├── 01_data_cleaning.R
 │   ├── 02_explore.R
 │   ├── 03_analysis.R
 │   └── 04_figures.R
@@ -84,8 +83,6 @@ The iNaturalist data used here is publicly available under a Creative Commons li
 ---
 
 ## AI Use Statement
-
-Example below:
 
 Claude (Anthropic) was used to assist with setting up the GitHub repository structure and explaining Git workflows. Initial exploratory code was partially drafted with AI assistance and then reviewed, modified, and verified by the author. All analytical decisions, interpretations, and written content are the author's own.
 
