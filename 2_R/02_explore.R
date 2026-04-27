@@ -1,8 +1,10 @@
 ## Installing packages if needed
 # install.packages("ggplot2")
+# install.packages("classInt")
 
 ## Libraries
 library(ggplot2)
+library(classInt)
 
 # How many unique users are in the dataset?
 
@@ -12,6 +14,8 @@ n_distinct(uoa_data$user_login)
 
 obs_per_user <- uoa_data |>
   count(user_login, sort = TRUE)
+
+write.csv(obs_per_user, "01_observations_per_user.csv", row.names = FALSE)
 
 uoa_data |>
   count(user_login, sort = TRUE) |>
@@ -39,7 +43,7 @@ uoa_data |>
   ggplot(aes(x = reorder(user_login, -n), y = n)) +
   geom_col(fill = "steelblue") +
   labs(
-    title = "Number of Observations per User",
+    title = "Number of Observations per User (with >1 observation)",
     x = "User",
     y = "Number of Observations"
   ) +
@@ -97,9 +101,9 @@ uoa_data |>
   group_by(is_stephen) |>
   summarise(total_obs = sum(n))
 
-# If I split the users into three groups, on-offs, active, and highly active
+# If I split the users into three groups, one-offs, active, and highly active
 # (where the number of observations needed for each category are made up by me),
-# what is the % split?
+# what should the % split be?
 
 user_counts <- uoa_data |>
   count(user_login)
@@ -123,8 +127,6 @@ user_counts |>
   arrange(group)
 
 # Jenks natural breaks - finds splits that minimise within-group variance
-install.packages("classInt")
-library(classInt)
 
 breaks <- classIntervals(user_counts$n, n = 3, style = "jenks")
 print(breaks)
@@ -189,7 +191,7 @@ uoa_data |>
   mutate(group = if_else(n_days == 1, "one_day", "multi_day")) |>
   count(group)
 
-# Number of users who had more than 1 total observation
+# Number of users who had more than 2 total observations
 
 uoa_data |>
   filter(user_login != "stephen_thorpe") |>
@@ -212,9 +214,11 @@ uoa_data |>
 
 # what did they observe?
 
-uoa_data |>
+invertebratist_obs <- uoa_data |>
   filter(user_login == "invertebratist") |>
   select(user_login, observed_on, common_name, ha_animal, charisma_score)
+
+write.csv(invertebratist_obs, "08_invertebratist_observations.csv", row.names = FALSE)
 
 # comparison of charisma scores between one-off and active users (and stephen)
 
@@ -269,7 +273,7 @@ uoa_data_grouped %>%
   ggplot(aes(x = n_obs, y = mean_charisma, colour = user_group)) +
   geom_point(alpha = 0.6) +
   labs(
-    title = "Mean charisma score vs total observations per user",
+    title = "Charisma score vs total observations per user",
     x     = "Total observations",
     y     = "Mean charisma score",
     colour = "User group"
