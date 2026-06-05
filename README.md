@@ -6,7 +6,7 @@ Analysis of iNaturalist biodiversity observations recorded on the University of 
 
 ## Project Overview
 
-This project explores biodiversity patterns on the UoA City Campus using citizen science observation data from iNaturalist. The analysis examines how the proportion of charismatic animal species recorded by casual and power users of the iNaturalist UoA Campus Project differ. 
+This project explores biodiversity patterns on the UoA City Campus using citizen science observation data from iNaturalist. The analysis examines how the charisma is reflected in the iNaturalist animal record on the University of Auckland campus in New Zealand.
 
 The findings are written up as a *Significance*-style article aimed at a general, non-specialist audience.
 
@@ -16,10 +16,10 @@ The findings are written up as a *Significance*-style article aimed at a general
 
 | File | Description |
 |------|-------------|
-| `01_data/raw/UoA_campus_observations701361.ods` | iNaturalist observations from the UoA City Campus (n = 5,654 records, 2002–present). Columns include observation date, GPS coordinates, taxon classification, common name, quality grade, and observer ID. |
+| `01_data/raw/UoA_campus_observations701361.ods` | iNaturalist observations from the UoA City Campus (n = 1,048,575 observations, 2002–2026). Columns include observation date, GPS coordinates, taxon classification, common name, quality grade, and observer ID. |
 | `01_data/raw/HumanAnimal_relations_Appendix_A1.xlsx` | Supplementary dataset on human–animal relationships, including ratings for valence, arousal, familiarity, cuteness, dangerousness, and other attributes across animal categories. Used for defining whether an animal is considered charismatic or not.
 
-> Raw data files are read-only and are not modified by any script. All outputs are written to `03_figures/` and `04_outputs/`.
+> Raw data files are not modified by any script. All outputs are written to `03_figures/` and `04_outputs/`.
 
 ---
 
@@ -43,10 +43,8 @@ install.packages(c(
 
 Run the scripts in order from the `02_R/` folder:
 
-1. `01_data_cleaning.R` — imports raw data, standardises column names, filters to research-quality observations
-2. `02_explore.R` — exploratory summaries and initial plots
-3. `03_analysis.R` — main analysis (species richness, temporal trends, etc.)
-4. `04_figures.R` — generates final figures saved to `03_figures/`
+1. `01_data_cleaning.R` — imports raw data, standardises column names, filters to relevant columns and observations (e.g. animals in UoA dataset)
+2. `02_analysis.R` — main analysis and generation of final figures saved to `03_figures/`
 
 Each script can be run independently as long as the previous outputs exist, or run all in sequence from `00_run_all.R`.
 
@@ -65,13 +63,9 @@ uoa-campus-biodiversity/
 ├── 02_R/
 │   ├── 00_run_all.R            ← runs all scripts in sequence
 │   ├── 01_data_cleaning.R
-│   ├── 02_explore.R
-│   ├── 03_analysis.R
-│   └── 04_figures.R
+│   └── 02_analysis.R
 │
-├── 03_figures/                 ← all plots exported here (PNG/PDF)
-|   ├── 01_exploratory_figures/
-|   ├── 02_analysis_figures/
+├── 03_figures/                 ← all plots exported here (PNG)
 │
 └── 04_outputs/                 ← summary tables and results (CSV)
 ```
