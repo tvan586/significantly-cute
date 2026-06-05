@@ -12,14 +12,8 @@ library(here)
 
 # ============================================================
 # Data setup
-# ------------------------------------------------------------
-# Run the cleaning script so this script is fully reproducible
-# on its own / from a clean session. Provides:
-#   ha_data_full, ha_scores, uoa_data
-#   (with ha_animal, charisma_score, quality_grade, user_login),
-#   and charisma_per_user
 # ============================================================
-source(here::here("2_r_code", "01_data_cleaning.R"))
+source(here("2_r_code", "01_data_cleaning.R"))
 
 # ============================================================
 # Shared plot style
@@ -48,7 +42,7 @@ pca_summary <- summary(ha_pca)
 round(ha_pca$rotation[, 1:3], 2)   # console check: PC1-3 loadings
 
 pca_summary_df <- as.data.frame(pca_summary$importance)
-write.csv(pca_summary_df, here::here("4_outputs", "01_ha_pca_summary.csv"))
+write.csv(pca_summary_df, here("4_outputs", "01_ha_pca_summary.csv"))
 
 pc1_order <- names(sort(ha_pca$rotation[, "PC1"]))
 p_pca_loadings <- ha_pca$rotation |>
@@ -66,11 +60,6 @@ p_pca_loadings <- ha_pca$rotation |>
   theme(legend.position = "none")
 p_pca_loadings
 
-# This loadings plot was previously built and displayed but never saved.
-# Saved here for consistency with the other figures; delete if not needed.
-ggsave(here::here("3_figures", "05_pca_loadings.png"), p_pca_loadings,
-       width = 10, height = 6, dpi = 300, bg = "white")
-
 p_pca_biplot <- fviz_pca_biplot(ha_pca, geom.ind = "point",
                                 habillage = ha_pca_input$category,
                                 palette = "viridis", col.var = "black", repel = TRUE) +
@@ -80,7 +69,7 @@ p_pca_biplot <- fviz_pca_biplot(ha_pca, geom.ind = "point",
        x = pc_lab_x, y = pc_lab_y)
 p_pca_biplot
 
-ggsave(here::here("3_figures", "01_pca_biplot.png"), p_pca_biplot, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave(here("3_figures", "01_pca_biplot.png"), p_pca_biplot, width = 10, height = 6, dpi = 300, bg = "white")
 
 # ============================================================
 # 2. Place UoA observations in PC space and cluster them
@@ -113,7 +102,7 @@ p_uoa_pc_space <- ggplot(uoa_animal, aes(PC1, PC2)) +
        colour = "Charisma score", size = "Observations")
 p_uoa_pc_space
 
-ggsave(here::here("3_figures", "02_uoa_pc_space.png"), p_uoa_pc_space, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave(here("3_figures", "02_uoa_pc_space.png"), p_uoa_pc_space, width = 10, height = 6, dpi = 300, bg = "white")
 
 # ============================================================
 # 3. Does charisma drift as users gain experience?
@@ -164,7 +153,7 @@ p_experience <- ggplot() +
        title = "Linear Mixed Model: Experience vs Charisma")
 p_experience
 
-ggsave(here::here("3_figures", "03_experience.png"), p_experience, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave(here("3_figures", "03_experience.png"), p_experience, width = 10, height = 6, dpi = 300, bg = "white")
 
 # ============================================================
 # 4. Does charisma predict reaching research grade?
@@ -186,7 +175,7 @@ m_engage <- glm(research_grade ~ charisma_score + familiarity,
 summary(m_engage)
 odds_ratio_table <- exp(cbind(odds_ratio = coef(m_engage), confint(m_engage)))
 
-write.csv(odds_ratio_table, here::here("4_outputs", "02_odds_ratio_table.csv"))
+write.csv(odds_ratio_table, here("4_outputs", "02_odds_ratio_table.csv"))
 
 newdata <- data.frame(
   charisma_score = seq(min(model_data$charisma_score),
@@ -207,4 +196,4 @@ p_research_grade <- ggplot(newdata, aes(charisma_score, prob)) +
        title = "More charismatic observations are more likely to be confirmed")
 p_research_grade
 
-ggsave(here::here("3_figures", "04_research_grade.png"), p_research_grade, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave(here("3_figures", "04_research_grade.png"), p_research_grade, width = 10, height = 6, dpi = 300, bg = "white")

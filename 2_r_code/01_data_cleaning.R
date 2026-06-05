@@ -9,7 +9,7 @@ library(here)
 # Load the Human–Animal Relations dataset and build the charisma score
 # ============================================================
 ha_data_full <- read_csv(
-  here::here("1_data", "Human-Animal_relations_Appendix A.csv"),
+  here("1_data", "Human-Animal_relations_Appendix A.csv"),
   col_names = FALSE, skip = 3)
 
 colnames(ha_data_full) <- c(
@@ -36,7 +36,7 @@ ha_scores <- ha_data_full |>
 # ============================================================
 # Load the iNaturalist UoA campus dataset (fix macron encoding)
 # ============================================================
-uoa_data <- read_csv(here::here("1_data", "UoA_campus_observations-701361.csv")) |>
+uoa_data <- read_csv(here("1_data", "UoA_campus_observations-701361.csv")) |>
   mutate(common_name = iconv(common_name, from = "UTF-8", to = "UTF-8", sub = ""))
 
 # ============================================================
