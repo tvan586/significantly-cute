@@ -10,8 +10,8 @@ The findings are written up as a *Significance*-style article aimed at a general
 
 | File | Description |
 |------|-------------|
-| `01_data/UoA_campus_observations701361.csv` | iNaturalist observations from the UoA City Campus (n = 1,048,575 observations, 2002–2026). Columns include observation ID, date, user ID, quality grade, coordinates, common name, and taxanomic classification. |
-| `01_data/HumanAnimal_relations_Appendix_A.csv` | Supplementary dataset on human–animal relationships, including ratings for valence, arousal, familiarity, cuteness, dangerousness, and other dimensions across animal categories. Used for defining whether an animal is considered charismatic or not.
+| `01_data/UoA_campus_observations-701361.csv` | iNaturalist observations from the UoA City Campus (n = 1,048,575 observations, 2002–2026). Columns include observation ID, date, user ID, quality grade, coordinates, common name, and taxanomic classification. |
+| `01_data/Human-Animal_relations_Appendix A.csv` | Supplementary dataset on human–animal relationships, including ratings for valence, arousal, familiarity, cuteness, dangerousness, and other dimensions across animal categories. Used for defining whether an animal is considered charismatic or not.
 
 ## How to Run the Analysis
 
