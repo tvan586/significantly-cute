@@ -70,6 +70,8 @@ uoa-campus-biodiversity/
 │   └── 04_figures.R
 │
 ├── 03_figures/                 ← all plots exported here (PNG/PDF)
+|   ├── 01_exploratory_figures/
+|   ├── 02_analysis_figures/
 │
 └── 04_outputs/                 ← summary tables and results (CSV)
 ```
