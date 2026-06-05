@@ -8,7 +8,7 @@ library(dplyr)
 # Load the Human–Animal Relations dataset and build the charisma score
 # ============================================================
 ha_data_full <- read_csv(
-  "https://raw.githubusercontent.com/tvan586/significantly-cute/refs/heads/main/1_data/Human-Animal_relations_Appendix%20A(1).csv",
+  "https://raw.githubusercontent.com/tvan586/significantly-cute/refs/heads/main/1_data/Human-Animal_relations_Appendix%20A.csv",
   col_names = FALSE, skip = 3)
 
 colnames(ha_data_full) <- c(
