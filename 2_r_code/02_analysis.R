@@ -38,8 +38,11 @@ ha_pca <- ha_pca_input |>
   scale() |>
   prcomp()
 
-summary(ha_pca)
+pca_summary <- summary(ha_pca)
 round(ha_pca$rotation[, 1:3], 2)
+
+pca_summary_df <- as.data.frame(summary(ha_pca)$importance)
+write.csv(pca_summary_df, here::here("4_outputs", "01_ha_pca_summary.csv"))
 
 pc1_order <- names(sort(ha_pca$rotation[, "PC1"]))
 ha_pca$rotation |>
@@ -63,6 +66,7 @@ p_pca_biplot <- fviz_pca_biplot(ha_pca, geom.ind = "point",
   theme_minimal(base_size = 12) +
   labs(title = "Possidónio et al. Trait dimensions and animals in PC space",
        x = pc_lab_x, y = pc_lab_y)
+p_pca_biplot
 
 ggsave(here("3_figures", "01_pca_biplot.png"), p_pca_biplot, width = 12, height = 7, dpi = 300, bg = "white")
 
@@ -88,25 +92,10 @@ uoa_animal <- uoa_data |>
   left_join(ha_pc_animal, by = c("ha_animal" = "animal")) |>
   filter(!is.na(PC1))
 
-set.seed(123)
-fviz_nbclust(uoa_animal |> select(PC1, PC2), kmeans, method = "silhouette") +
-  labs(subtitle = "Silhouette method")
-
-set.seed(123)
-km <- kmeans(uoa_animal |> select(PC1, PC2), centers = 2, nstart = 25)  # centers = silhouette peak
-uoa_animal <- uoa_animal |> mutate(cluster = factor(km$cluster))
-
-uoa_animal |>
-  group_by(cluster) |>
-  summarise(mean_PC1 = mean(PC1), mean_PC2 = mean(PC2),
-            mean_charisma = mean(charisma_score),
-            n_animals = n(), total_obs = sum(n_obs), .groups = "drop")
-
 p_uoa_pc_space <- ggplot(uoa_animal, aes(PC1, PC2)) +
   geom_hline(yintercept = 0, colour = ref_col, linewidth = 0.3) +
   geom_vline(xintercept = 0, colour = ref_col, linewidth = 0.3) +
   geom_point(aes(colour = charisma_score, size = n_obs), alpha = 0.7) +
-  stat_ellipse(aes(group = cluster), linetype = "dashed", colour = ell_col) +
   scale_colour_viridis_c() +
   scale_size_continuous(range = c(2, 12)) +
   scale_x_continuous(breaks = pc_breaks) +
@@ -184,7 +173,9 @@ model_data <- uoa_data |>
 m_engage <- glm(research_grade ~ charisma_score + familiarity,
                 data = model_data, family = binomial)
 summary(m_engage)
-exp(cbind(odds_ratio = coef(m_engage), confint(m_engage)))
+odds_ratio_table <- exp(cbind(odds_ratio = coef(m_engage), confint(m_engage)))
+
+write.csv(odds_ratio_table, here::here("4_outputs", "02_odds_ratio_table.csv"))
 
 newdata <- data.frame(
   charisma_score = seq(min(model_data$charisma_score),
@@ -203,5 +194,6 @@ p_research_grade <- ggplot(newdata, aes(charisma_score, prob)) +
   coord_cartesian(ylim = c(-0.05, 1.05)) +
   labs(x = "Charisma score", y = "Probability of reaching research grade",
        title = "More charismatic observations are more likely to be confirmed")
+p_research_grade
 
 ggsave(here("3_figures", "04_research_grade.png"), p_research_grade, width = 12, height = 7, dpi = 300, bg = "white")
