@@ -13,8 +13,6 @@ The findings are written up as a *Significance*-style article aimed at a general
 | `01_data/UoA_campus_observations701361.csv` | iNaturalist observations from the UoA City Campus (n = 1,048,575 observations, 2002–2026). Columns include observation ID, date, user ID, quality grade, coordinates, common name, and taxanomic classification. |
 | `01_data/HumanAnimal_relations_Appendix_A.csv` | Supplementary dataset on human–animal relationships, including ratings for valence, arousal, familiarity, cuteness, dangerousness, and other dimensions across animal categories. Used for defining whether an animal is considered charismatic or not.
 
-> Raw data files are not modified by any script. All outputs are written to `03_figures/` and `04_outputs/`.
-
 ## How to Run the Analysis
 
 ### Requirements
@@ -43,8 +41,6 @@ Run the scripts in order from the `02_R/` folder:
 1. `00_environment_setup.R` - sets up your R environment so all the necessary packages are installed
 2. `01_data_cleaning.R` - imports raw data, standardises column names, filters to relevant columns and observations (e.g. animals in UoA dataset)
 3. `02_analysis.R` - main analysis and generation of final figures saved to `03_figures/`
-
-Each script can be run independently as long as the previous outputs exist.
 
 ## Repository Structure
 
