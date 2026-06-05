@@ -1,7 +1,6 @@
 # ============================================================
 # Libraries
 # ============================================================
-library(readr)
 library(dplyr)
 library(tidyr)
 library(tibble)
@@ -12,19 +11,26 @@ library(lmerTest)
 library(here)
 
 # ============================================================
+# Data setup
+# ------------------------------------------------------------
+# Run the cleaning script so this script is fully reproducible
+# on its own / from a clean session. Provides:
+#   ha_data_full, ha_scores, uoa_data
+#   (with ha_animal, charisma_score, quality_grade, user_login),
+#   and charisma_per_user
+# ============================================================
+source(here::here("2_r_code", "01_data_cleaning.R"))
+
+# ============================================================
 # Shared plot style
 # ============================================================
 theme_set(theme_minimal(base_size = 12))
 fit_col   <- "#2c3e50"
 ribbon_fl <- "grey50"
 ref_col   <- "grey70"
-ell_col   <- "grey40"
 pc_breaks <- seq(-8, 8, by = 2)
 pc_lab_x  <- "PC1 (60.5%)"
 pc_lab_y  <- "PC2 (20.7%)"
-
-# Expects from the data-cleaning script: ha_data_full, uoa_data
-# (with ha_animal, charisma_score, quality_grade, user_login), and charisma_per_user
 
 # ============================================================
 # 1. Validate the charisma score: do the three dimensions load together?
@@ -39,13 +45,13 @@ ha_pca <- ha_pca_input |>
   prcomp()
 
 pca_summary <- summary(ha_pca)
-round(ha_pca$rotation[, 1:3], 2)
+round(ha_pca$rotation[, 1:3], 2)   # console check: PC1-3 loadings
 
-pca_summary_df <- as.data.frame(summary(ha_pca)$importance)
+pca_summary_df <- as.data.frame(pca_summary$importance)
 write.csv(pca_summary_df, here::here("4_outputs", "01_ha_pca_summary.csv"))
 
 pc1_order <- names(sort(ha_pca$rotation[, "PC1"]))
-ha_pca$rotation |>
+p_pca_loadings <- ha_pca$rotation |>
   as.data.frame() |>
   rownames_to_column("dimension") |>
   pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "loading") |>
@@ -58,17 +64,23 @@ ha_pca$rotation |>
   scale_fill_manual(values = c(`FALSE` = "grey75", `TRUE` = fit_col)) +
   labs(x = "Loading", y = NULL, title = "PCA loadings by dimension") +
   theme(legend.position = "none")
+p_pca_loadings
+
+# This loadings plot was previously built and displayed but never saved.
+# Saved here for consistency with the other figures; delete if not needed.
+ggsave(here::here("3_figures", "05_pca_loadings.png"), p_pca_loadings,
+       width = 10, height = 6, dpi = 300, bg = "white")
 
 p_pca_biplot <- fviz_pca_biplot(ha_pca, geom.ind = "point",
-                habillage = ha_pca_input$category,
-                palette = "viridis", col.var = "black", repel = TRUE) +
+                                habillage = ha_pca_input$category,
+                                palette = "viridis", col.var = "black", repel = TRUE) +
   coord_fixed() +
   theme_minimal(base_size = 12) +
   labs(title = "Possidónio et al. Trait dimensions and animals in PC space",
        x = pc_lab_x, y = pc_lab_y)
 p_pca_biplot
 
-ggsave(here("3_figures", "01_pca_biplot.png"), p_pca_biplot, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave(here::here("3_figures", "01_pca_biplot.png"), p_pca_biplot, width = 10, height = 6, dpi = 300, bg = "white")
 
 # ============================================================
 # 2. Place UoA observations in PC space and cluster them
@@ -78,13 +90,8 @@ ha_pc_animal <- ha_pca_input |>
   group_by(animal) |>
   summarise(PC1 = mean(PC1), PC2 = mean(PC2), .groups = "drop")
 
-ha_charisma <- ha_data_full |>
-  mutate(raw = (cuteness_M + valence_M + feelings_care_M) / 3,
-         charisma_score = 1 + ((raw - 1) / 6) * 9) |>
-  group_by(animal) |>
-  summarise(charisma_score = mean(charisma_score, na.rm = TRUE), .groups = "drop")
-
-ha_pc_animal <- ha_pc_animal |> left_join(ha_charisma, by = "animal")
+# reuse the charisma scores already built in 01_data_cleaning.R
+ha_pc_animal <- ha_pc_animal |> left_join(ha_scores, by = "animal")
 
 uoa_animal <- uoa_data |>
   filter(!is.na(ha_animal)) |>
@@ -106,7 +113,7 @@ p_uoa_pc_space <- ggplot(uoa_animal, aes(PC1, PC2)) +
        colour = "Charisma score", size = "Observations")
 p_uoa_pc_space
 
-ggsave(here("3_figures", "02_uoa_pc_space.png"), p_uoa_pc_space, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave(here::here("3_figures", "02_uoa_pc_space.png"), p_uoa_pc_space, width = 10, height = 6, dpi = 300, bg = "white")
 
 # ============================================================
 # 3. Does charisma drift as users gain experience?
@@ -114,6 +121,7 @@ ggsave(here("3_figures", "02_uoa_pc_space.png"), p_uoa_pc_space, width = 10, hei
 charisma_per_user <- charisma_per_user |>
   mutate(log_experience = log10(n_observations))
 
+# per-user linear model (reported in text)
 exp_model <- lm(mean_charisma ~ log_experience, data = charisma_per_user)
 summary(exp_model)
 
@@ -139,8 +147,11 @@ pred_grid$upper <- pred_grid$fit + 1.96 * pred_grid$se
 vc <- as.data.frame(VarCorr(uoa_model))$vcov   # [1] between-user, [2] residual
 var_fixed <- var(predict(uoa_model, re.form = NA))
 
-var_fixed / sum(var_fixed, vc)              # marginal R²: experience alone
-sum(var_fixed, vc[1]) / sum(var_fixed, vc)  # conditional R²: experience + observer
+# variance explained (reported in text)
+r2_marginal    <- var_fixed / sum(var_fixed, vc)              # experience alone
+r2_conditional <- sum(var_fixed, vc[1]) / sum(var_fixed, vc)  # experience + observer
+r2_marginal
+r2_conditional
 
 p_experience <- ggplot() +
   geom_point(data = charisma_per_user, aes(log_experience, mean_charisma), alpha = 0.3) +
@@ -153,12 +164,12 @@ p_experience <- ggplot() +
        title = "Linear Mixed Model: Experience vs Charisma")
 p_experience
 
-ggsave(here("3_figures", "03_experience.png"), p_experience, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave(here::here("3_figures", "03_experience.png"), p_experience, width = 10, height = 6, dpi = 300, bg = "white")
 
 # ============================================================
 # 4. Does charisma predict reaching research grade?
 # ============================================================
-uoa_data |> count(quality_grade)
+uoa_data |> count(quality_grade)   # sanity check on class balance
 
 ha_familiarity <- ha_data_full |>
   group_by(animal) |>
@@ -196,4 +207,4 @@ p_research_grade <- ggplot(newdata, aes(charisma_score, prob)) +
        title = "More charismatic observations are more likely to be confirmed")
 p_research_grade
 
-ggsave(here("3_figures", "04_research_grade.png"), p_research_grade, width = 10, height = 6, dpi = 300, bg = "white")
+ggsave(here::here("3_figures", "04_research_grade.png"), p_research_grade, width = 10, height = 6, dpi = 300, bg = "white")

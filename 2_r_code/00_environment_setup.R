@@ -3,9 +3,11 @@
 # ============================================================
 
 install.packages(c(
-  "tidyverse",
   "readr",
-  "lubridate",
+  "dplyr",
+  "tidyr",
+  "tibble",
+  "ggplot2",
   "factoextra",
   "lme4",
   "lmerTest",
