@@ -41,8 +41,8 @@ install.packages(c(
 Run the scripts in order from the `02_R/` folder:
 
 1. `00_environment_setup.R` - sets up your R environment so all the necessary packages are installed
-2. `01_data_cleaning.R` — imports raw data, standardises column names, filters to relevant columns and observations (e.g. animals in UoA dataset)
-3. `02_analysis.R` — main analysis and generation of final figures saved to `03_figures/`
+2. `01_data_cleaning.R` - imports raw data, standardises column names, filters to relevant columns and observations (e.g. animals in UoA dataset)
+3. `02_analysis.R` - main analysis and generation of final figures saved to `03_figures/`
 
 Each script can be run independently as long as the previous outputs exist.
 
