@@ -1,12 +1,12 @@
-# UoA City Campus Biodiversity Analysis
+# UoA City Campus Animal Charisma Analysis
 
-Analysis of iNaturalist biodiversity observations recorded on the University of Auckland City Campus, submitted as part of a *Significance*-style article for BIOSCI 738.
+Analysis of iNaturalist animal observations recorded on the University of Auckland City Campus, submitted as part of a *Significance*-style article for BIOSCI 738.
 
 ---
 
 ## Project Overview
 
-This project explores biodiversity patterns on the UoA City Campus using citizen science observation data from iNaturalist. The analysis examines how the charisma is reflected in the iNaturalist animal record on the University of Auckland campus in New Zealand.
+This project explores how charisma of animals effects the structure of data records on the University of Auckland City Campus in New Zealand using citizen science observation data from iNaturalist.
 
 The findings are written up as a *Significance*-style article aimed at a general, non-specialist audience.
 
@@ -16,8 +16,8 @@ The findings are written up as a *Significance*-style article aimed at a general
 
 | File | Description |
 |------|-------------|
-| `01_data/raw/UoA_campus_observations701361.ods` | iNaturalist observations from the UoA City Campus (n = 1,048,575 observations, 2002–2026). Columns include observation date, GPS coordinates, taxon classification, common name, quality grade, and observer ID. |
-| `01_data/raw/HumanAnimal_relations_Appendix_A1.xlsx` | Supplementary dataset on human–animal relationships, including ratings for valence, arousal, familiarity, cuteness, dangerousness, and other attributes across animal categories. Used for defining whether an animal is considered charismatic or not.
+| `01_data/UoA_campus_observations701361.csv` | iNaturalist observations from the UoA City Campus (n = 1,048,575 observations, 2002–2026). Columns include observation ID, date, user ID, quality grade, coordinates, common name, and taxanomic classification. |
+| `01_data/HumanAnimal_relations_Appendix_A1.csv` | Supplementary dataset on human–animal relationships, including ratings for valence, arousal, familiarity, cuteness, dangerousness, and other dimensions across animal categories. Used for defining whether an animal is considered charismatic or not.
 
 > Raw data files are not modified by any script. All outputs are written to `03_figures/` and `04_outputs/`.
 
@@ -60,8 +60,7 @@ uoa-campus-biodiversity/
 │
 ├── README.md                   ← you are here
 │
-├── 01_data/
-│   └── raw/                    ← original unmodified data files
+├── 01_data/                    ← original unmodified data files
 │
 ├── 02_R/
 │   ├── 00_run_all.R            ← runs all scripts in sequence

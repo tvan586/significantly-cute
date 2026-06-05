@@ -352,18 +352,17 @@ display: none;
 </div>
 
 
-<div id="uoa-city-campus-biodiversity-analysis" class="section level1">
-<h1>UoA City Campus Biodiversity Analysis</h1>
-<p>Analysis of iNaturalist biodiversity observations recorded on the
+<div id="uoa-city-campus-animal-charisma-analysis" class="section level1">
+<h1>UoA City Campus Animal Charisma Analysis</h1>
+<p>Analysis of iNaturalist animal observations recorded on the
 University of Auckland City Campus, submitted as part of a
 <em>Significance</em>-style article for BIOSCI 738.</p>
 <hr />
 <div id="project-overview" class="section level2">
 <h2>Project Overview</h2>
-<p>This project explores biodiversity patterns on the UoA City Campus
-using citizen science observation data from iNaturalist. The analysis
-examines how the proportion of charismatic animal species recorded by
-casual and power users of the iNaturalist UoA Campus Project differ.</p>
+<p>This project explores how charisma of animals effects the structure
+of data records on the University of Auckland City Campus in New Zealand
+using citizen science observation data from iNaturalist.</p>
 <p>The findings are written up as a <em>Significance</em>-style article
 aimed at a general, non-specialist audience.</p>
 <hr />
@@ -383,25 +382,24 @@ aimed at a general, non-specialist audience.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>01_data/raw/UoA_campus_observations701361.ods</code></td>
-<td>iNaturalist observations from the UoA City Campus (n = 5,654
-records, 2002–present). Columns include observation date, GPS
-coordinates, taxon classification, common name, quality grade, and
-observer ID.</td>
+<td><code>01_data/UoA_campus_observations701361.csv</code></td>
+<td>iNaturalist observations from the UoA City Campus (n = 1,048,575
+observations, 2002–2026). Columns include observation ID, date, user ID,
+quality grade, coordinates, common name, and taxanomic
+classification.</td>
 </tr>
 <tr class="even">
-<td><code>01_data/raw/HumanAnimal_relations_Appendix_A1.xlsx</code></td>
+<td><code>01_data/HumanAnimal_relations_Appendix_A1.csv</code></td>
 <td>Supplementary dataset on human–animal relationships, including
 ratings for valence, arousal, familiarity, cuteness, dangerousness, and
-other attributes across animal categories. Used for [<strong>describe
-how you use it, or remove if not used</strong>].</td>
+other dimensions across animal categories. Used for defining whether an
+animal is considered charismatic or not.</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p>Raw data files are read-only and are not modified by any script. All
-outputs are written to <code>03_figures/</code> and
-<code>04_outputs/</code>.</p>
+<p>Raw data files are not modified by any script. All outputs are
+written to <code>03_figures/</code> and <code>04_outputs/</code>.</p>
 </blockquote>
 <hr />
 </div>
@@ -410,29 +408,28 @@ outputs are written to <code>03_figures/</code> and
 <div id="requirements" class="section level3">
 <h3>Requirements</h3>
 <ul>
-<li>R (version 4.x or later)</li>
+<li>R (version 4.5.3 or later)</li>
 <li>The following R packages:</li>
 </ul>
 <pre class="r"><code>install.packages(c(
-  &quot;tidyverse&quot;,   # data wrangling and plotting
-  &quot;readODS&quot;,     # reading .ods files
-  &quot;readxl&quot;,      # reading .xlsx files
+  &quot;tidyverse&quot;,   # collection including dplyr, tidyr, tibble, ggplot2, readr
+  &quot;readr&quot;,       # reading .csv files
   &quot;lubridate&quot;,   # date handling
-  &quot;sf&quot;           # spatial data (if mapping)
+  &quot;factoextra&quot;,  # clustering and multivariate data visualization
+  &quot;lme4&quot;,        # mixed-effects models
+  &quot;lmerTest&quot;,    # p-values and tests for lme4 models
+  &quot;here&quot;         # project-oriented file paths
 ))</code></pre>
 </div>
 <div id="running-the-scripts" class="section level3">
 <h3>Running the scripts</h3>
 <p>Run the scripts in order from the <code>02_R/</code> folder:</p>
 <ol style="list-style-type: decimal">
-<li><code>01_load_and_clean.R</code> — imports raw data, standardises
-column names, filters to research-quality observations</li>
-<li><code>02_explore.R</code> — exploratory summaries and initial
-plots</li>
-<li><code>03_analysis.R</code> — main analysis (species richness,
-temporal trends, etc.)</li>
-<li><code>04_figures.R</code> — generates final figures saved to
-<code>03_figures/</code></li>
+<li><code>01_data_cleaning.R</code> — imports raw data, standardises
+column names, filters to relevant columns and observations (e.g. animals
+in UoA dataset)</li>
+<li><code>02_analysis.R</code> — main analysis and generation of final
+figures saved to <code>03_figures/</code></li>
 </ol>
 <p>Each script can be run independently as long as the previous outputs
 exist, or run all in sequence from <code>00_run_all.R</code>.</p>
@@ -450,12 +447,10 @@ exist, or run all in sequence from <code>00_run_all.R</code>.</p>
 │
 ├── 02_R/
 │   ├── 00_run_all.R            ← runs all scripts in sequence
-│   ├── 01_load_and_clean.R
-│   ├── 02_explore.R
-│   ├── 03_analysis.R
-│   └── 04_figures.R
+│   ├── 01_data_cleaning.R
+│   └── 02_analysis.R
 │
-├── 03_figures/                 ← all plots exported here (PNG/PDF)
+├── 03_figures/                 ← all plots exported here (PNG)
 │
 └── 04_outputs/                 ← summary tables and results (CSV)</code></pre>
 <hr />
@@ -471,7 +466,6 @@ this study.</p>
 </div>
 <div id="ai-use-statement" class="section level2">
 <h2>AI Use Statement</h2>
-<p>Example below:</p>
 <p>Claude (Anthropic) was used to assist with setting up the GitHub
 repository structure and explaining Git workflows. Initial exploratory
 code was partially drafted with AI assistance and then reviewed,

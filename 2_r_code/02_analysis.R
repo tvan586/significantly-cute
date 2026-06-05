@@ -68,7 +68,7 @@ p_pca_biplot <- fviz_pca_biplot(ha_pca, geom.ind = "point",
        x = pc_lab_x, y = pc_lab_y)
 p_pca_biplot
 
-ggsave(here("3_figures", "01_pca_biplot.png"), p_pca_biplot, width = 12, height = 7, dpi = 300, bg = "white")
+ggsave(here("3_figures", "01_pca_biplot.png"), p_pca_biplot, width = 10, height = 6, dpi = 300, bg = "white")
 
 # ============================================================
 # 2. Place UoA observations in PC space and cluster them
@@ -106,7 +106,7 @@ p_uoa_pc_space <- ggplot(uoa_animal, aes(PC1, PC2)) +
        colour = "Charisma score", size = "Observations")
 p_uoa_pc_space
 
-ggsave(here("3_figures", "02_uoa_pc_space.png"), p_uoa_pc_space, width = 12, height = 7, dpi = 300, bg = "white")
+ggsave(here("3_figures", "02_uoa_pc_space.png"), p_uoa_pc_space, width = 10, height = 6, dpi = 300, bg = "white")
 
 # ============================================================
 # 3. Does charisma drift as users gain experience?
@@ -153,7 +153,7 @@ p_experience <- ggplot() +
        title = "Linear Mixed Model: Experience vs Charisma")
 p_experience
 
-ggsave(here("3_figures", "03_experience.png"), p_experience, width = 12, height = 7, dpi = 300, bg = "white")
+ggsave(here("3_figures", "03_experience.png"), p_experience, width = 10, height = 6, dpi = 300, bg = "white")
 
 # ============================================================
 # 4. Does charisma predict reaching research grade?
@@ -196,4 +196,4 @@ p_research_grade <- ggplot(newdata, aes(charisma_score, prob)) +
        title = "More charismatic observations are more likely to be confirmed")
 p_research_grade
 
-ggsave(here("3_figures", "04_research_grade.png"), p_research_grade, width = 12, height = 7, dpi = 300, bg = "white")
+ggsave(here("3_figures", "04_research_grade.png"), p_research_grade, width = 10, height = 6, dpi = 300, bg = "white")
