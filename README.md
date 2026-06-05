@@ -32,13 +32,15 @@ The findings are written up as a *Significance*-style article aimed at a general
 
 ```r
 install.packages(c(
-  "tidyverse",   # collection including dplyr, tidyr, tibble, ggplot2, readr
-  "readr",       # reading .csv files
-  "lubridate",   # date handling
-  "factoextra",  # clustering and multivariate data visualization
-  "lme4",        # mixed-effects models
-  "lmerTest",    # p-values and tests for lme4 models
-  "here"         # project-oriented file paths
+  "readr",
+  "dplyr",
+  "tidyr",
+  "tibble",
+  "ggplot2",
+  "factoextra",
+  "lme4",
+  "lmerTest",
+  "here"
 ))
 ```
 
