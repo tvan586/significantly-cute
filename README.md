@@ -58,18 +58,18 @@ Each script can be run independently as long as the previous outputs exist, or r
 ```
 uoa-campus-biodiversity/
 │
-├── README.md                   ← you are here
+├── README.md
 │
-├── 01_data/                    ← original unmodified data files
+├── 01_data/
 │
-├── 02_R/
-│   ├── 00_run_all.R            ← runs all scripts in sequence
+├── 02_r_code/
+│   ├── 00_environment_setup.R
 │   ├── 01_data_cleaning.R
 │   └── 02_analysis.R
 │
-├── 03_figures/                 ← all plots exported here (PNG)
+├── 03_figures/
 │
-└── 04_outputs/                 ← summary tables and results (CSV)
+└── 04_outputs/
 ```
 
 ---
@@ -82,7 +82,11 @@ The iNaturalist data used here is publicly available under a Creative Commons li
 
 ## AI Use Statement
 
-Claude (Anthropic) was used to assist with setting up the GitHub repository structure and explaining Git workflows. Initial exploratory code was partially drafted with AI assistance and then reviewed, modified, and verified by the author. All analytical decisions, interpretations, and written content are the author's own.
+I used Claude (Anthropic) throughout this project to clarify concepts and tidy up code. All of the writing here is my own, and so are the analytical and interpretive decisions. Where I did use AI, I critically analysed every output and only took on board what made sense to me and what I could verify myself was correct.
+
+Most of what I asked was specifically for understanding something before I made a call on it and helping find redundancies in my code. I asked it to look through one of my scripts and flag redundancies for me to review, so the code in my repo was tidy and readable. Other times it was a concept I wanted to be sure of: when my logistic regression gave me an odds ratio, I asked what it actually meant, and Claude walked me through reading it: each one-point rise in charisma nearly doubles the odds of a record reaching research grade, also pointing out that an odds ratio is about odds, not probability, which changed how I worded that result. The interpretation in the article is mine; I just wanted to understand the concept properly before writing it up.
+
+So AI was a tool for understanding concepts and cleaning up code. Every analytical and writing decision in this article is mine.
 
 ---
 
